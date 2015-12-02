@@ -8,6 +8,7 @@
 
 namespace Drupal\field_formatter\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
@@ -18,6 +19,9 @@ abstract class FieldFormatterBase extends FormatterBase {
   protected $viewDisplay;
 
   /**
+   * @param string $bundle_id
+   *   The bundle ID.
+   *
    * @return \Drupal\Core\Entity\Display\EntityViewDisplayInterface
    */
   abstract protected function getViewDisplay($bundle_id);
@@ -37,12 +41,21 @@ abstract class FieldFormatterBase extends FormatterBase {
     return $build;
   }
 
+  protected function getAvailableFieldNames() {
+    $entity_type_id = $this->fieldDefinition->getSetting('target_type');
+    $bundle_id = $this->fieldDefinition->getTargetBundle();
+    $field_names = array_map(function (FieldDefinitionInterface $field_definition) {
+      return $field_definition->getLabel();
+    }, \Drupal::service('entity_field.manager')->getFieldDefinitions($entity_type_id, $bundle_id));
+    return $field_names;
+  }
+
   /**
    * {@inheritdoc}
    */
   public static function isApplicable(FieldDefinitionInterface $field_definition) {
     $entity_type = \Drupal::entityTypeManager()->getDefinition($field_definition->getTargetEntityTypeId());
-    return $entity_type->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface');
+    return $entity_type->isSubclassOf(FieldableEntityInterface::class);
   }
 
 }

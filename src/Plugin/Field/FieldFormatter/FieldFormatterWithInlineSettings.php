@@ -9,7 +9,6 @@
 namespace Drupal\field_formatter\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -42,24 +41,17 @@ class FieldFormatterWithInlineSettings extends FieldFormatterBase {
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $form = parent::settingsForm($form, $form_state);
 
-    $entity_type_id = $this->fieldDefinition->getSetting('target_type');
-    $bundle_id = $this->fieldDefinition->getTargetBundle();
-    $field_names = array_map(function (FieldDefinitionInterface $field_definition) {
-      return $field_definition->getLabel();
-    }, \Drupal::entityManager()->getFieldDefinitions($entity_type_id, $bundle_id));
-
     $form['field_name'] = [
       '#type' => 'select',
       '#title' => $this->t('Field name'),
       '#default_value' => $this->getSetting('field_name'),
-      '#options' => $field_names,
+      '#options' => $this->getAvailableFieldNames(),
     ];
 
     // @todo
 
     return $form;
   }
-
 
   /**
    * {@inheritdoc}

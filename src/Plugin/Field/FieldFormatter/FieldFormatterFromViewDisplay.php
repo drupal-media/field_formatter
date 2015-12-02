@@ -9,7 +9,6 @@ namespace Drupal\field_formatter\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -48,17 +47,11 @@ class FieldFormatterFromViewDisplay extends FieldFormatterBase {
       '#default_value' => EntityViewMode::load($this->getSetting('view_display_id')),
     ];
 
-    $entity_type_id = $this->fieldDefinition->getSetting('target_type');
-    $bundle_id = $this->fieldDefinition->getTargetBundle();
-    $field_names = array_map(function (FieldDefinitionInterface $field_definition) {
-      return $field_definition->getLabel();
-    }, \Drupal::entityManager()->getFieldDefinitions($entity_type_id, $bundle_id));
-
     $form['field_name'] = [
       '#type' => 'select',
       '#title' => $this->t('Field name'),
       '#default_value' => $this->getSetting('field_name'),
-      '#options' => $field_names,
+      '#options' => $this->getAvailableFieldNames(),
     ];
 
     return $form;
@@ -70,6 +63,7 @@ class FieldFormatterFromViewDisplay extends FieldFormatterBase {
       // Odd that this is needed.
       list($entity_type_id, $view_mode) = explode('.', $this->getSetting('view_display_id'));
       if (($view_display_id = $this->getSetting('view_display_id')) && $view_display = EntityViewDisplay::load($entity_type_id . '.' . $bundle_id . '.' . $view_mode)) {
+        /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $view_display */
         $components = $view_display->getComponents();
         foreach ($components as $component_name => $component) {
           if ($component_name != $field_name) {

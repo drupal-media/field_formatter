@@ -17,7 +17,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @FieldFormatter(
  *   id = "field_formatter_from_view_display",
- *   label = @Translation("Field formatter"),
+ *   label = @Translation("Field formatter from view display"),
  *   field_types = {
  *     "entity_reference"
  *   }
@@ -64,11 +64,8 @@ class FieldFormatterFromViewDisplay extends FieldFormatterBase {
     return $form;
   }
 
-  protected function getViewDisplay() {
-    if (!isset($this->viewDisplay)) {
-      /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity */
-      $bundle_id = $entity->bundle();
-
+  protected function getViewDisplay($bundle_id) {
+    if (!isset($this->viewDisplay[$bundle_id])) {
       $field_name = $this->getSetting('field_name');
       // Odd that this is needed.
       list($entity_type_id, $view_mode) = explode('.', $this->getSetting('view_display_id'));
@@ -77,12 +74,12 @@ class FieldFormatterFromViewDisplay extends FieldFormatterBase {
         foreach ($components as $component_name => $component) {
           if ($component_name != $field_name) {
             $view_display->removeComponent($component_name);
-            $this->viewDisplay = $view_display;
           }
         }
+        $this->viewDisplay[$bundle_id] = $view_display;
       }
     }
-    return $this->viewDisplay;
+    return $this->viewDisplay[$bundle_id];
   }
 
 }

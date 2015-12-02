@@ -12,6 +12,17 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 
+/**
+ * Plugin implementation of the 'link' formatter.
+ *
+ * @FieldFormatter(
+ *   id = "field_formatter_with_inline_settings",
+ *   label = @Translation("Field formatter with inline settings"),
+ *   field_types = {
+ *     "entity_reference"
+ *   }
+ * )
+ */
 class FieldFormatterWithInlineSettings extends FieldFormatterBase {
 
   /**
@@ -53,21 +64,21 @@ class FieldFormatterWithInlineSettings extends FieldFormatterBase {
   /**
    * {@inheritdoc}
    */
-  protected function getViewDisplay() {
-    if (!isset($this->viewDisplay)) {
+  protected function getViewDisplay($bundle_id) {
+    if (!isset($this->viewDisplay[$bundle_id])) {
 
       $display = EntityViewDisplay::create([
         'targetEntityType' => $this->fieldDefinition->getSetting('target_type'),
-        'bundle' => $this->fieldDefinition->getTargetBundle(),
+        'bundle' => $bundle_id,
         'status' => TRUE,
       ]);
       $display->setComponent($this->getSetting('field_name'), [
         'type' => $this->getSetting('type'),
         'settings' => $this->getSetting('settings'),
       ]);
-      $this->viewDisplay = $display;
+      $this->viewDisplay[$bundle_id] = $display;
     }
-    return $this->viewDisplay;
+    return $this->viewDisplay[$bundle_id];
   }
 
 }

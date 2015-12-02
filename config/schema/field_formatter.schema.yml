@@ -1,0 +1,17 @@
+field.formatter.settings.field_formatter_from_view_display:
+  type: mapping
+  mapping:
+    view_display_id:
+      type: string
+    field_name:
+      type: string
+
+field.formatter.settings.field_formatter_with_inline_settings:
+  type: mapping
+  mapping:
+    field_name:
+      type: string
+    type:
+      type: string
+    settings:
+      type: field.formatter.settings.[%parent.type]

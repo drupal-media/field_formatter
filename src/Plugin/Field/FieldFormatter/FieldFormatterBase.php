@@ -20,7 +20,7 @@ abstract class FieldFormatterBase extends FormatterBase {
   /**
    * @return \Drupal\Core\Entity\Display\EntityViewDisplayInterface
    */
-  abstract protected function getViewDisplay();
+  abstract protected function getViewDisplay($bundle_id);
 
   /**
    * {@inheritdoc}
@@ -29,7 +29,10 @@ abstract class FieldFormatterBase extends FormatterBase {
     /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity */
     $entity = $items->getEntity();
 
-    $build = $this->getViewDisplay()->build($entity);
+    $build = [];
+    foreach ($items as $delta => $item) {
+      $build[$delta] = $this->getViewDisplay($entity->bundle())->build($item->entity);
+    }
 
     return $build;
   }

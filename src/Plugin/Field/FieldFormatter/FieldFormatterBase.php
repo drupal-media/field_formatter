@@ -2,8 +2,7 @@
 
 /**
  * @file
- * Contains
- *   \Drupal\field_formatter\Plugin\Field\FieldFormatter\FieldFormatterBase.
+ * Contains \Drupal\field_formatter\Plugin\Field\FieldFormatter\FieldFormatterBase.
  */
 
 namespace Drupal\field_formatter\Plugin\Field\FieldFormatter;
@@ -15,7 +14,11 @@ use Drupal\Core\Field\FormatterBase;
 
 abstract class FieldFormatterBase extends FormatterBase {
 
-  /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface */
+  /**
+   * The entity view display.
+   *
+   * @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface
+   */
   protected $viewDisplay;
 
   /**
@@ -46,7 +49,7 @@ abstract class FieldFormatterBase extends FormatterBase {
     $bundle_id = $this->fieldDefinition->getTargetBundle();
     $field_names = array_map(function (FieldDefinitionInterface $field_definition) {
       return $field_definition->getLabel();
-    }, \Drupal::service('entity_field.manager')->getFieldDefinitions($entity_type_id, $bundle_id));
+    }, $this->entityFieldManager->getFieldDefinitions($entity_type_id, $bundle_id));
     return $field_names;
   }
 

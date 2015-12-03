@@ -2,8 +2,7 @@
 
 /**
  * @file
- * Contains
- *   \Drupal\field_formatter\Plugin\Field\FieldFormatter\FieldFormatterWithInlineSettings.
+ * Contains \Drupal\field_formatter\Plugin\Field\FieldFormatter\FieldFormatterWithInlineSettings.
  */
 
 namespace Drupal\field_formatter\Plugin\Field\FieldFormatter;

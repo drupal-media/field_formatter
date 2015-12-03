@@ -45,7 +45,7 @@ abstract class FieldFormatterBase extends FormatterBase {
     $entity_type_id = $this->fieldDefinition->getSetting('target_type');
     $bundle_id = $this->fieldDefinition->getTargetBundle();
     $field_names = array_map(function (FieldDefinitionInterface $field_definition) {
-      return $field_definition->getLabel();
+      return $field_definition->getLabel() . ' (' . $field_definition->getName() . ')';
     }, \Drupal::service('entity_field.manager')->getFieldDefinitions($entity_type_id, $bundle_id));
     return $field_names;
   }

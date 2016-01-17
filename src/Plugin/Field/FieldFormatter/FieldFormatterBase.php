@@ -12,8 +12,9 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
+use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceFormatterBase;
 
-abstract class FieldFormatterBase extends FormatterBase {
+abstract class FieldFormatterBase extends EntityReferenceFormatterBase {
 
   /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface */
   protected $viewDisplay;
@@ -31,13 +32,12 @@ abstract class FieldFormatterBase extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity */
-    $entity = $items->getEntity();
+    $entities = $this->getEntitiesToView($items, $langcode);
 
     $build = [];
-    foreach ($items as $delta => $item) {
-      $build[$delta] = $this->getViewDisplay($entity->bundle())->build($item->entity);
+    foreach($entities as $delta => $entity) {
+        $build[$delta] = $this->getViewDisplay($entity->bundle())->build($entity);
     }
-
     return $build;
   }
 

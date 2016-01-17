@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.test_content_type.field_field_test_ref
+    - node.type.test_content_type
+  module:
+    - field_formatter
+    - user
+id: node.test_content_type.default
+targetEntityType: node
+bundle: test_content_type
+mode: default
+content:
+  field_field_test_ref:
+    weight: 101
+    label: above
+    settings:
+      view_display_id: taxonomy_term.test_view_mode
+      field_name: field_test_field
+    third_party_settings: {  }
+    type: field_formatter_from_view_display
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

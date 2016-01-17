@@ -12,6 +12,8 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\user\Entity\Role;
+use Drupal\user\Entity\User;
 
 /**
  * @coversDefaultClass \Drupal\field_formatter\Plugin\Field\FieldFormatter\FieldFormatterWithInlineSettings
@@ -20,9 +22,16 @@ use Drupal\KernelTests\KernelTestBase;
 class FieldFormatterWithInlineSettingsTest extends KernelTestBase {
 
   /**
+   * Admin user.
+   *
+   * @var \Drupal\User\UserInterface
+   */
+  protected $adminUser;
+
+  /**
    * {@inheritdoc}
    */
-  public static $modules = ['entity_test', 'user', 'field', 'field_formatter'];
+  public static $modules = ['entity_test', 'user', 'field', 'field_formatter', 'system'];
 
   /**
    * {@inheritdoc}
@@ -30,8 +39,23 @@ class FieldFormatterWithInlineSettingsTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
 
+    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('user');
+
+
+    $admin_role = Role::create([
+        'id' => 'admin',
+        'permissions' => ['view test entity'],
+    ]);
+    $admin_role->save();
+
+    $this->adminUser = User::create([
+        'name' => $this->randomMachineName(),
+        'roles' => [$admin_role->id()],
+    ]);
+    $this->adminUser->save();
+    \Drupal::currentUser()->setAccount($this->adminUser);
   }
 
   public function testRender() {
@@ -84,7 +108,20 @@ class FieldFormatterWithInlineSettingsTest extends KernelTestBase {
 
     \Drupal::service('renderer')->renderRoot($build);
 
-    $this->assertEquals('child name', $build['test_er_field'][0]['#markup']);
+    $expected_output = <<<EXPECTED
+
+  <div>
+    <div>test_er_field</div>
+              <div>
+  <div>
+    <div>Name</div>
+              <div>child name</div>
+          </div>
+</div>
+          </div>
+
+EXPECTED;
+    $this->assertEquals($expected_output, $build['test_er_field']['#markup']);
   }
 
 }

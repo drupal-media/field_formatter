@@ -3,6 +3,7 @@ status: true
 dependencies:
   config:
     - field.field.node.test_content_type.field_field_test_ref
+    - field.field.node.test_content_type.field_field_test_ref_inline
     - node.type.test_content_type
 id: node.test_content_type.default
 targetEntityType: node
@@ -16,6 +17,14 @@ content:
     third_party_settings: {  }
   field_field_test_ref:
     weight: 31
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+  field_field_test_ref_inline:
+    weight: 32
     settings:
       match_operator: CONTAINS
       size: 60

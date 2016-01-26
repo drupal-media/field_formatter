@@ -3,6 +3,7 @@ status: true
 dependencies:
   config:
     - field.field.node.test_content_type.field_field_test_ref
+    - field.field.node.test_content_type.field_field_test_ref_inline
     - node.type.test_content_type
   module:
     - field_formatter
@@ -20,6 +21,16 @@ content:
       field_name: field_test_field
     third_party_settings: {  }
     type: field_formatter_from_view_display
+  field_field_test_ref_inline:
+    weight: 102
+    label: above
+    settings:
+      field_name: field_test_field
+      type: string
+      settings:
+        link_to_entity: false
+    third_party_settings: {  }
+    type: field_formatter_with_inline_settings
   links:
     weight: 100
     settings: {  }

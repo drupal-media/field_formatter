@@ -76,4 +76,29 @@ class FieldFormatterFromViewDisplay extends FieldFormatterBase {
     return $this->viewDisplay[$bundle_id];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsSummary() {
+    $summary = parent::settingsSummary();
+
+    if ($field_name = $this->getSetting('field_name')) {
+      $summary[] = $this->t('Field %field_name displayed.', ['%field_name' => $field_name]);
+    }
+    else {
+      $summary[] = $this->t('Field not configured.');
+    }
+
+    if ($display = $this->getSetting('view_display_id')) {
+      $summary[] = $this->t('View display %display used.', ['%display' => $display]);
+    }
+    else {
+      $summary[] = $this->t('View display not configured.');
+    }
+
+    return $summary;
+  }
+
+
+
 }

@@ -17,7 +17,7 @@ content:
     weight: 101
     label: above
     settings:
-      view_display_id: taxonomy_term.test_view_mode
+      view_mode: test_view_mode
       field_name: field_test_field
     third_party_settings: {  }
     type: field_formatter_from_view_display

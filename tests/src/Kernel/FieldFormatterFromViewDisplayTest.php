@@ -86,7 +86,7 @@ class FieldFormatterFromViewDisplayTest extends KernelTestBase {
     $parent_entity_view_display->setComponent('test_er_field', [
       'type' => 'field_formatter_from_view_display',
       'settings' => [
-        'view_display_id' => 'entity_test.child',
+        'view_display_id' => 'child',
         'field_name' => 'name',
       ]
     ]);

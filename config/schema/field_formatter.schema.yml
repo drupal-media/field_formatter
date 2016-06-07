@@ -1,7 +1,7 @@
 field.formatter.settings.field_formatter_from_view_display:
   type: mapping
   mapping:
-    view_display_id:
+    view_mode:
       type: string
     field_name:
       type: string

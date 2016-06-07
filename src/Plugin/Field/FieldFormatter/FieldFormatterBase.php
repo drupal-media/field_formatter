@@ -1,29 +1,32 @@
 <?php
 
-/**
- * @file
- * Contains
- *   \Drupal\field_formatter\Plugin\Field\FieldFormatter\FieldFormatterBase.
- */
-
 namespace Drupal\field_formatter\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceFormatterBase;
 
+/**
+ * Base class for field formatters.
+ */
 abstract class FieldFormatterBase extends EntityReferenceFormatterBase {
 
-  /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface */
+  /**
+   * Entity view display.
+   *
+   * @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface
+   */
   protected $viewDisplay;
 
   /**
+   * Gets entity view display for a bundle.
+   *
    * @param string $bundle_id
    *   The bundle ID.
    *
    * @return \Drupal\Core\Entity\Display\EntityViewDisplayInterface
+   *   Entity view display.
    */
   abstract protected function getViewDisplay($bundle_id);
 
@@ -35,33 +38,39 @@ abstract class FieldFormatterBase extends EntityReferenceFormatterBase {
     $entities = $this->getEntitiesToView($items, $langcode);
 
     $build = [];
-    foreach($entities as $delta => $entity) {
-        $build[$delta] = $this->getViewDisplay($entity->bundle())->build($entity);
+    foreach ($entities as $delta => $entity) {
+      $build[$delta] = $this->getViewDisplay($entity->bundle())->build($entity);
     }
     return $build;
   }
 
+  /**
+   * Gets list of supported fields.
+   *
+   * @return array
+   *   List of fields that are supported keyed by field machine name.
+   */
   protected function getAvailableFieldNames() {
-    $array_off_field_names = [];
+    $field_names = [];
     $entity_type_id = $this->fieldDefinition->getSetting('target_type');
-    $bundle_id = $this->fieldDefinition->getSetting('handler_settings');
-    $bundle_id = $bundle_id['target_bundles'];
-//  or  $bundle_id = reset($bundle_id);
-    foreach($bundle_id as $id => $value) {
-      $bundle_id = $value;
-      $field_names = array_map(function (FieldDefinitionInterface $field_definition) {
-        return $field_definition->getLabel();
-      }, \Drupal::service('entity_field.manager')->getFieldDefinitions($entity_type_id, $bundle_id));
-      $array_off_field_names = array_merge($array_off_field_names, $field_names);
+    foreach ($this->fieldDefinition->getSetting('handler_settings')['target_bundles'] as $value) {
+      $field_names = array_map(
+        function (FieldDefinitionInterface $field_definition) {
+          return $field_definition->getLabel();
+        },
+        \Drupal::service('entity_field.manager')->getFieldDefinitions($entity_type_id, $value)
+      );
+      $field_names = array_merge($field_names, $field_names);
     }
-    return $array_off_field_names;
+    return $field_names;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function isApplicable(FieldDefinitionInterface $field_definition) {
-    $entity_type = \Drupal::entityTypeManager()->getDefinition($field_definition->getTargetEntityTypeId());
+    $entity_type = \Drupal::entityTypeManager()
+      ->getDefinition($field_definition->getTargetEntityTypeId());
     return $entity_type->isSubclassOf(FieldableEntityInterface::class);
   }
 

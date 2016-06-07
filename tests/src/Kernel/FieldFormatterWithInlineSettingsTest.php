@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field_formatter\Kernel\FieldFormatterWithInlineSettingsTest.
- */
-
 namespace Drupal\Tests\field_formatter\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
@@ -31,7 +26,13 @@ class FieldFormatterWithInlineSettingsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['entity_test', 'user', 'field', 'field_formatter', 'system'];
+  public static $modules = [
+    'entity_test',
+    'user',
+    'field',
+    'field_formatter',
+    'system',
+  ];
 
   /**
    * {@inheritdoc}
@@ -43,21 +44,23 @@ class FieldFormatterWithInlineSettingsTest extends KernelTestBase {
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('user');
 
-
     $admin_role = Role::create([
-        'id' => 'admin',
-        'permissions' => ['view test entity'],
+      'id' => 'admin',
+      'permissions' => ['view test entity'],
     ]);
     $admin_role->save();
 
     $this->adminUser = User::create([
-        'name' => $this->randomMachineName(),
-        'roles' => [$admin_role->id()],
+      'name' => $this->randomMachineName(),
+      'roles' => [$admin_role->id()],
     ]);
     $this->adminUser->save();
     \Drupal::currentUser()->setAccount($this->adminUser);
   }
 
+  /**
+   * Tests rendered output of the formatter.
+   */
   public function testRender() {
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'test_er_field',
@@ -65,7 +68,7 @@ class FieldFormatterWithInlineSettingsTest extends KernelTestBase {
       'type' => 'entity_reference',
       'settings' => [
         'target_type' => 'entity_test',
-      ]
+      ],
     ]);
     $field_storage->save();
 
@@ -88,7 +91,7 @@ class FieldFormatterWithInlineSettingsTest extends KernelTestBase {
         'field_name' => 'name',
         'type' => 'string',
         'settings' => [],
-      ]
+      ],
     ]);
     $parent_entity_view_display->save();
 
@@ -100,7 +103,8 @@ class FieldFormatterWithInlineSettingsTest extends KernelTestBase {
     $entity = EntityTest::create([
       'test_er_field' => [[
         'target_id' => $child_entity->id(),
-      ]],
+      ],
+      ],
     ]);
     $entity->save();
 

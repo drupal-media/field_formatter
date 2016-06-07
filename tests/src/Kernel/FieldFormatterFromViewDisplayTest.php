@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field_formatter\Kernel\FieldFormatterFromViewDisplayTest.
- */
-
 namespace Drupal\Tests\field_formatter\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
@@ -32,7 +27,13 @@ class FieldFormatterFromViewDisplayTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['entity_test', 'user', 'field', 'field_formatter', 'system'];
+  public static $modules = [
+    'entity_test',
+    'user',
+    'field',
+    'field_formatter',
+    'system',
+  ];
 
   /**
    * {@inheritdoc}
@@ -44,21 +45,23 @@ class FieldFormatterFromViewDisplayTest extends KernelTestBase {
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('user');
 
-
     $admin_role = Role::create([
-        'id' => 'admin',
-        'permissions' => ['view test entity'],
+      'id' => 'admin',
+      'permissions' => ['view test entity'],
     ]);
     $admin_role->save();
 
     $this->adminUser = User::create([
-        'name' => $this->randomMachineName(),
-        'roles' => [$admin_role->id()],
+      'name' => $this->randomMachineName(),
+      'roles' => [$admin_role->id()],
     ]);
     $this->adminUser->save();
     \Drupal::currentUser()->setAccount($this->adminUser);
   }
 
+  /**
+   * Tests rendered output of the formatter.
+   */
   public function testRender() {
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'test_er_field',
@@ -66,7 +69,7 @@ class FieldFormatterFromViewDisplayTest extends KernelTestBase {
       'type' => 'entity_reference',
       'settings' => [
         'target_type' => 'entity_test',
-      ]
+      ],
     ]);
     $field_storage->save();
 
@@ -88,7 +91,7 @@ class FieldFormatterFromViewDisplayTest extends KernelTestBase {
       'settings' => [
         'view_display_id' => 'child',
         'field_name' => 'name',
-      ]
+      ],
     ]);
     $parent_entity_view_display->save();
 
@@ -98,7 +101,7 @@ class FieldFormatterFromViewDisplayTest extends KernelTestBase {
     ]);
     $child_view_mode->save();
     $child_entity_view_display = EntityViewDisplay::create([
-      'id' =>'entity_test.entity_test.child',
+      'id' => 'entity_test.entity_test.child',
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
       'mode' => 'child',
@@ -108,7 +111,6 @@ class FieldFormatterFromViewDisplayTest extends KernelTestBase {
     ]);
     $child_entity_view_display->save();
 
-
     $child_entity = EntityTest::create([
       'name' => ['child name'],
     ]);
@@ -117,7 +119,8 @@ class FieldFormatterFromViewDisplayTest extends KernelTestBase {
     $entity = EntityTest::create([
       'test_er_field' => [[
         'target_id' => $child_entity->id(),
-      ]],
+      ],
+      ],
     ]);
     $entity->save();
 

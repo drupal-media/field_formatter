@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains
- *   \Drupal\field_formatter\Plugin\Field\FieldFormatter\FieldFormatterWithInlineSettings.
- */
-
 namespace Drupal\field_formatter\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
@@ -103,7 +97,7 @@ class FieldFormatterWithInlineSettings extends FieldFormatterBase implements Con
   }
 
   /**
-   * Get field definition for given field storage definition
+   * Get field definition for given field storage definition.
    *
    * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $field_storage_definition
    *   The field storage definition.
@@ -175,6 +169,7 @@ class FieldFormatterWithInlineSettings extends FieldFormatterBase implements Con
   public static function onFormatterTypeChange(array $form, FormStateInterface $form_state) {
     return $form['fields'][$form_state->getStorage()['plugin_settings_edit']]['plugin']['settings_edit_form']['settings']['settings'];
   }
+
   /**
    * Rebuilds the form on select submit.
    *
@@ -196,12 +191,12 @@ class FieldFormatterWithInlineSettings extends FieldFormatterBase implements Con
     $triggering_element = $form_state->getTriggeringElement();
     $target_entity_type_id = $this->fieldDefinition->getSetting('target_type');
     $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($target_entity_type_id);
-    $formatted_field_name = $this->getSetting('field_name') ? : key($field_storage_definitions);
+    $formatted_field_name = $this->getSetting('field_name') ?: key($field_storage_definitions);
     $field_storage = $field_storage_definitions[$formatted_field_name];
 
     if ($triggering_element['#name'] == "fields[$field_name][settings_edit_form][settings][field_name]") {
       $formatted_field_name = $triggering_element['#value'];
-      if($triggering_element['#value'] != $this->getSetting('field_name')) {
+      if ($triggering_element['#value'] != $this->getSetting('field_name')) {
         $field_storage = $field_storage_definitions[$triggering_element['#value']];
       }
     }
@@ -231,7 +226,7 @@ class FieldFormatterWithInlineSettings extends FieldFormatterBase implements Con
       if ($triggering_element['#name'] == "fields[$field_name][settings_edit_form][settings][field_name]") {
         $formatter_type = key($formatter_options);
       }
-      else if ($triggering_element['#name'] == "fields[$field_name][settings_edit_form][settings][type]") {
+      elseif ($triggering_element['#name'] == "fields[$field_name][settings_edit_form][settings][type]") {
         // If triggered element is formatter set correct formatter type.
         $formatter_type = $triggering_element['#value'];
       }
@@ -318,6 +313,5 @@ class FieldFormatterWithInlineSettings extends FieldFormatterBase implements Con
 
     return $summary;
   }
-
 
 }

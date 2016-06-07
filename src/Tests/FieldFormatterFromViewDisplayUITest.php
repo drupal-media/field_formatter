@@ -33,7 +33,7 @@ class FieldFormatterFromViewDisplayUITest extends WebTestBase {
 
     $this->adminUser = $this->drupalCreateUser([
       'administer taxonomy',
-      'bypass node access'
+      'bypass node access',
     ]);
     $this->drupalLogin($this->adminUser);
   }
@@ -48,17 +48,17 @@ class FieldFormatterFromViewDisplayUITest extends WebTestBase {
     $field = strtolower($this->randomMachineName());
     $edit_term = [
       'name[0][value]' => $term_name,
-      'field_test_field[0][value]' => $field
+      'field_test_field[0][value]' => $field,
     ];
     $this->drupalPostForm(NULL, $edit_term, t('Save'));
-    $this->assertText(t("Created new term $term_name."), t("Created term."));
+    $this->assertText("Created new term $term_name.", 'Created term.');
 
     // Add content.
     $this->drupalGet('node/add/test_content_type');
     $content_name = strtolower($this->randomMachineName());
     $edit_content = [
       'title[0][value]' => $content_name,
-      'field_field_test_ref[0][target_id]' => $term_name
+      'field_field_test_ref[0][target_id]' => $term_name,
     ];
     $this->drupalPostForm(NULL, $edit_content, t('Save'));
     $this->assertRaw('<div class="field__label">test_field</div>', 'Field is correctly displayed on node page.');

@@ -89,7 +89,7 @@ class FieldFormatterFromViewDisplay extends FieldFormatterBase implements Contai
     $options = [];
     foreach ($this->entityTypeManager->getStorage('entity_view_mode')->loadMultiple() as $id => $view_mode) {
       // Filter out view modes that have status set to FALSE since they will
-      // reuse the 'default' display settings by default
+      // reuse the 'default' display settings by default.
       if ($view_mode->getTargetType() == $this->fieldDefinition->getSetting('target_type') && $view_mode->status()) {
         $options[$id] = $view_mode->label();
       }
@@ -113,6 +113,9 @@ class FieldFormatterFromViewDisplay extends FieldFormatterBase implements Contai
     return $form;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function getViewDisplay($bundle_id) {
     if (!isset($this->viewDisplay[$bundle_id])) {
       $field_name = $this->getSetting('field_name');

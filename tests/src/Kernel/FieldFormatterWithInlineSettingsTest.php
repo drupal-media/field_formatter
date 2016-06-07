@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field_formatter\Kernel\FieldFormatterWithInlineSettingsTest.
- */
-
 namespace Drupal\Tests\field_formatter\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;

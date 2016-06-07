@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\field_formatter\Plugin\Field\FieldFormatter\FieldFormatterBase.
- */
-
 namespace Drupal\field_formatter\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Entity\FieldableEntityInterface;

@@ -1,8 +1,9 @@
 <?php
 
-namespace Drupal\Tests\field_formatter\Kernel;
+namespace Drupal\Tests\field_formatter\Kernel\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -11,10 +12,10 @@ use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 
 /**
- * @coversDefaultClass \Drupal\field_formatter\Plugin\Field\FieldFormatter\FieldFormatterWithInlineSettings
+ * @coversDefaultClass \Drupal\field_formatter\Plugin\Field\FieldFormatter\FieldFormatterFromViewDisplay
  * @group field_formatter
  */
-class FieldFormatterWithInlineSettingsTest extends KernelTestBase {
+class FieldFormatterFromViewDisplayTest extends KernelTestBase {
 
   /**
    * Admin user.
@@ -59,7 +60,9 @@ class FieldFormatterWithInlineSettingsTest extends KernelTestBase {
   }
 
   /**
-   * Tests rendered output of the formatter.
+   * @covers ::viewElements
+   * @covers ::getAvailableFieldNames
+   * @covers ::getViewDisplay
    */
   public function testRender() {
     $field_storage = FieldStorageConfig::create([
@@ -86,14 +89,29 @@ class FieldFormatterWithInlineSettingsTest extends KernelTestBase {
       'content' => [],
     ]);
     $parent_entity_view_display->setComponent('test_er_field', [
-      'type' => 'field_formatter_with_inline_settings',
+      'type' => 'field_formatter_from_view_display',
       'settings' => [
+        'view_display_id' => 'child',
         'field_name' => 'name',
-        'type' => 'string',
-        'settings' => [],
       ],
     ]);
     $parent_entity_view_display->save();
+
+    $child_view_mode = EntityViewMode::create([
+      'targetEntityType' => 'entity_test',
+      'id' => 'entity_test.child',
+    ]);
+    $child_view_mode->save();
+    $child_entity_view_display = EntityViewDisplay::create([
+      'id' => 'entity_test.entity_test.child',
+      'targetEntityType' => 'entity_test',
+      'bundle' => 'entity_test',
+      'mode' => 'child',
+    ]);
+    $child_entity_view_display->setComponent('name', [
+      'type' => 'string',
+    ]);
+    $child_entity_view_display->save();
 
     $child_entity = EntityTest::create([
       'name' => ['child name'],
@@ -117,11 +135,8 @@ class FieldFormatterWithInlineSettingsTest extends KernelTestBase {
   <div>
     <div>test_er_field</div>
               <div>
-  <div>
-    <div>Name</div>
-              <div>child name</div>
-          </div>
-</div>
+            <div>child name</div>
+      </div>
           </div>
 
 EXPECTED;

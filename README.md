@@ -6,6 +6,8 @@ a specific field of the referenced entity. There are currently two formatters:
 
 - Field formatter with inline settings
 - Field formatter from view display
+- Link field formatter, which will wrap output of any other formatter with a
+  link
 
 ## Installation
 

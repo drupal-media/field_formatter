@@ -1,6 +1,11 @@
 # Field Formatter
 
-[Field Formatter](https://www.drupal.org/project/field_formatter) module adds formatters for entity reference fields to output only a specific field. This module provides two formatters: *Field formatter with inline settings* and *Field formatter from view display*.
+[Field Formatter](https://www.drupal.org/project/field_formatter) module provides
+a collection of generic formatters for entity reference fields that output only
+a specific field of the referenced entity. There are currently two formatters:
+
+- Field formatter with inline settings
+- Field formatter from view display
 
 ## Installation
 

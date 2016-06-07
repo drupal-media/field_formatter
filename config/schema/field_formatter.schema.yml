@@ -15,3 +15,11 @@ field.formatter.settings.field_formatter_with_inline_settings:
       type: string
     settings:
       type: field.formatter.settings.[%parent.type]
+
+field.formatter.settings.field_link:
+  type: mapping
+  mapping:
+    type:
+      type: string
+    settings:
+      type: field.formatter.settings.[%parent.type]

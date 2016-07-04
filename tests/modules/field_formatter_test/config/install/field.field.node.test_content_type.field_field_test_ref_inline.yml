@@ -20,6 +20,7 @@ settings:
   handler_settings:
     target_bundles:
       test_vocabulary: test_vocabulary
+      test_vocabulary2: test_vocabulary2
     sort:
       field: _none
     auto_create: false

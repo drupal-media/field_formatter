@@ -186,6 +186,7 @@ class FieldFormatterWithInlineSettings extends FieldFormatterBase implements Con
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
+    $form = parent::settingsForm($form, $form_state);
     // Name of the field this formatter is currently displaying.
     $field_name = $this->fieldDefinition->getName();
     $triggering_element = $form_state->getTriggeringElement();

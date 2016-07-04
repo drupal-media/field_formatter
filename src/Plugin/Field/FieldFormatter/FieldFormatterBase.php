@@ -54,13 +54,13 @@ abstract class FieldFormatterBase extends EntityReferenceFormatterBase {
     $field_names = [];
     $entity_type_id = $this->fieldDefinition->getSetting('target_type');
     foreach ($this->fieldDefinition->getSetting('handler_settings')['target_bundles'] as $value) {
-      $field_names = array_map(
+      $bundle_field_names = array_map(
         function (FieldDefinitionInterface $field_definition) {
           return $field_definition->getLabel();
         },
         \Drupal::service('entity_field.manager')->getFieldDefinitions($entity_type_id, $value)
       );
-      $field_names = array_merge($field_names, $field_names);
+      $field_names = array_merge($field_names, $bundle_field_names);
     }
     return $field_names;
   }

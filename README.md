@@ -2,12 +2,12 @@
 
 [Field Formatter](https://www.drupal.org/project/field_formatter) module provides
 a collection of generic formatters for entity reference fields that output only
-a specific field of the referenced entity. There are currently two formatters:
+a specific field of the referenced entity. There are currently three formatters:
 
-- Field formatter with inline settings
-- Field formatter from view display
+- Field formatter with inline settings (Entity reference fields)
+- Field formatter from view display (Entity reference fields)
 - Link field formatter, which will wrap output of any other formatter with a
-  link
+  link (all fields)
 
 ## Installation
 
@@ -18,6 +18,7 @@ a specific field of the referenced entity. There are currently two formatters:
 
 ## Usage
 
+### In order to use the "Field formatter with inline settings" and "Field formatter from view display":
 1. Create entity reference field:
   * On `admin/structure` choose **Content types**.
   * Choose content type entity reference field should be added to, for example:
@@ -39,3 +40,9 @@ a specific field of the referenced entity. There are currently two formatters:
   * You also need to configure *View mode* if you're using *Field formatter from
     view display*.
   * Click **Update** and then **Save**.
+
+### In order to use the "Field Linker" formatter:
+1. Go to your entity's **manage display** page.
+2. On the field you want to be wrapped with a link, select the formatter to
+   be **Field Linker**.
+3. This will wrap this field in a link pointing to the main entity's URL.

@@ -22,7 +22,7 @@ abstract class FieldWrapperBase extends FormatterBase implements ContainerFactor
   /**
    * Entity view display.
    *
-   * @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface
+   * @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface[]
    */
   protected $viewDisplay;
 

@@ -20,6 +20,9 @@ field.formatter.settings.field_formatter_with_inline_settings:
     settings:
       label: 'Formatter settings'
       type: field.formatter.settings.[%parent.type]
+    label:
+      label: 'Target field label visibility setting'
+      type: string
 
 field.formatter.settings.field_link:
   type: mapping

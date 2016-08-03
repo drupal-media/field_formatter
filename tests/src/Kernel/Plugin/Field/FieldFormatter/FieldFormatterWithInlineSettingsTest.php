@@ -59,11 +59,20 @@ class FieldFormatterWithInlineSettingsTest extends KernelTestBase {
   }
 
   /**
+   * Tests field_formatter_with_inline_settings formatter output.
+   *
+   * @param string|null $label_option
+   *   The value for the "label" formatter option.
+   * @param string $expected_output
+   *   The expected output.
+   *
    * @covers ::viewElements
    * @covers ::getAvailableFieldNames
    * @covers ::getViewDisplay
+   *
+   * @dataProvider providerTestRender
    */
-  public function testRender() {
+  public function testRender($label_option, $expected_output) {
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'test_er_field',
       'entity_type' => 'entity_test',
@@ -93,6 +102,7 @@ class FieldFormatterWithInlineSettingsTest extends KernelTestBase {
         'field_name' => 'name',
         'type' => 'string',
         'settings' => [],
+        'label' => $label_option,
       ],
     ]);
     $parent_entity_view_display->save();
@@ -114,7 +124,14 @@ class FieldFormatterWithInlineSettingsTest extends KernelTestBase {
 
     \Drupal::service('renderer')->renderRoot($build);
 
-    $expected_output = <<<EXPECTED
+    $this->assertEquals($expected_output, $build['test_er_field']['#markup']);
+  }
+
+  /**
+   * Data provider for ::testRender().
+   */
+  public function providerTestRender() {
+    $output_with_label = <<<EXPECTED
 
   <div>
     <div>test_er_field</div>
@@ -127,7 +144,23 @@ class FieldFormatterWithInlineSettingsTest extends KernelTestBase {
           </div>
 
 EXPECTED;
-    $this->assertEquals($expected_output, $build['test_er_field']['#markup']);
+    $output_without_label = <<<EXPECTED
+
+  <div>
+    <div>test_er_field</div>
+              <div>
+            <div>child name</div>
+      </div>
+          </div>
+
+EXPECTED;
+
+    return [
+      ['above', $output_with_label],
+      ['inline', $output_with_label],
+      ['hidden', $output_without_label],
+      ['visually_hidden', $output_with_label],
+    ];
   }
 
 }

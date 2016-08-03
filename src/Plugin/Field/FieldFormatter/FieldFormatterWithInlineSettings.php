@@ -93,6 +93,7 @@ class FieldFormatterWithInlineSettings extends FieldFormatterBase implements Con
       'field_name' => '',
       'type' => '',
       'settings' => [],
+      'label' => 'above',
     ];
   }
 
@@ -220,6 +221,18 @@ class FieldFormatterWithInlineSettings extends FieldFormatterBase implements Con
       '#executes_submit_callback' => TRUE,
     ];
 
+    $form['label'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Label'),
+      '#options' => [
+        'above' => $this->t('Above'),
+        'inline' => $this->t('Inline'),
+        'hidden' => '- ' . $this->t('Hidden') . ' -',
+        'visually_hidden' => '- ' . $this->t('Visually Hidden') . ' -',
+      ],
+      '#default_value' => $this->getSetting('label'),
+    ];
+
     $formatter_options = $this->getAvailableFormatterOptions($field_storage);
     if ($formatted_field_name) {
       // Form state is not updated as long just select elements are triggered.
@@ -286,6 +299,7 @@ class FieldFormatterWithInlineSettings extends FieldFormatterBase implements Con
       $display->setComponent($this->getSetting('field_name'), [
         'type' => $this->getSetting('type'),
         'settings' => $this->getSetting('settings'),
+        'label' => $this->getSetting('label'),
       ]);
       $this->viewDisplay[$bundle_id] = $display;
     }

@@ -189,19 +189,10 @@ class FieldFormatterWithInlineSettings extends FieldFormatterBase implements Con
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $form = parent::settingsForm($form, $form_state);
     // Name of the field this formatter is currently displaying.
-    $field_name = $this->fieldDefinition->getName();
-    $triggering_element = $form_state->getTriggeringElement();
     $target_entity_type_id = $this->fieldDefinition->getSetting('target_type');
     $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($target_entity_type_id);
-    $formatted_field_name = $this->getSetting('field_name') ?: key($field_storage_definitions);
+    $formatted_field_name = $this->getSettingFromFormState($form_state, 'field_name');
     $field_storage = $field_storage_definitions[$formatted_field_name];
-
-    if ($triggering_element['#name'] == "fields[$field_name][settings_edit_form][settings][field_name]") {
-      $formatted_field_name = $triggering_element['#value'];
-      if ($triggering_element['#value'] != $this->getSetting('field_name')) {
-        $field_storage = $field_storage_definitions[$triggering_element['#value']];
-      }
-    }
 
     $form['#prefix'] = '<div id="field-formatter-ajax">';
     $form['#suffix'] = '</div>';
@@ -230,19 +221,16 @@ class FieldFormatterWithInlineSettings extends FieldFormatterBase implements Con
         'hidden' => '- ' . $this->t('Hidden') . ' -',
         'visually_hidden' => '- ' . $this->t('Visually Hidden') . ' -',
       ],
-      '#default_value' => $this->getSetting('label'),
+      '#default_value' => $this->getSettingFromFormState($form_state, 'label'),
     ];
 
     $formatter_options = $this->getAvailableFormatterOptions($field_storage);
     if ($formatted_field_name) {
-      // Form state is not updated as long just select elements are triggered.
-      $formatter_type = $this->getSetting('type');
-      if ($triggering_element['#name'] == "fields[$field_name][settings_edit_form][settings][field_name]") {
+      $formatter_type = $this->getSettingFromFormState($form_state, 'type');
+      $settings = $this->getSettingFromFormState($form_state, 'settings');
+      if (!isset($formatter_options[$formatter_type])) {
         $formatter_type = key($formatter_options);
-      }
-      elseif ($triggering_element['#name'] == "fields[$field_name][settings_edit_form][settings][type]") {
-        // If triggered element is formatter set correct formatter type.
-        $formatter_type = $triggering_element['#value'];
+        $settings = [];
       }
 
       $form['type'] = [
@@ -265,7 +253,7 @@ class FieldFormatterWithInlineSettings extends FieldFormatterBase implements Con
         'field_definition' => $this->getFieldDefinition($field_storage),
         'configuration' => [
           'type' => $formatter_type,
-          'settings' => $this->getSetting('settings'),
+          'settings' => $settings,
           'label' => '',
           'weight' => 0,
         ],
@@ -275,7 +263,7 @@ class FieldFormatterWithInlineSettings extends FieldFormatterBase implements Con
       // Get the formatter settings form.
       $settings_form = ['#value' => []];
       if ($formatter = $this->formatterPluginManager->getInstance($options)) {
-        $settings_form = $formatter->settingsForm($form, $form_state);
+        $settings_form = $formatter->settingsForm([], $form_state);
       }
       $form['settings'] = $settings_form;
       $form['settings']['#prefix'] = '<div id="field-formatter-settings-ajax">';
@@ -327,6 +315,14 @@ class FieldFormatterWithInlineSettings extends FieldFormatterBase implements Con
     }
 
     return $summary;
+  }
+
+  protected function getSettingFromFormState(FormStateInterface $form_state, $setting) {
+    $field_name = $this->fieldDefinition->getName();
+    if ($form_state->hasValue(['fields', $field_name, 'settings_edit_form', 'settings', $setting])) {
+      return $form_state->getValue(['fields', $field_name, 'settings_edit_form', 'settings', $setting]);
+    }
+    return $this->getSetting($setting);
   }
 
 }

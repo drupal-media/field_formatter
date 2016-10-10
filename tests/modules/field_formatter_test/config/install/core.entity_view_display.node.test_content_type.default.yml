@@ -31,8 +31,5 @@ content:
         link_to_entity: false
     third_party_settings: {  }
     type: field_formatter_with_inline_settings
-  links:
-    weight: 100
-    settings: {  }
-    third_party_settings: {  }
-hidden: {  }
+hidden:
+  links: true

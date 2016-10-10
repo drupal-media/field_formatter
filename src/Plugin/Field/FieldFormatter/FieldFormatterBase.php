@@ -53,7 +53,11 @@ abstract class FieldFormatterBase extends EntityReferenceFormatterBase {
   protected function getAvailableFieldNames() {
     $field_names = [];
     $entity_type_id = $this->fieldDefinition->getSetting('target_type');
-    foreach ($this->fieldDefinition->getSetting('handler_settings')['target_bundles'] as $value) {
+
+    /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info */
+    $bundle_info = \Drupal::service('entity_type.bundle.info');
+    $target_bundles = $this->fieldDefinition->getSetting('handler_settings')['target_bundles'] === NULL ? array_keys($bundle_info->getBundleInfo($entity_type_id)) : $this->fieldDefinition->getSetting('handler_settings')['target_bundles'];
+    foreach ($target_bundles as $value) {
       $bundle_field_names = array_map(
         function (FieldDefinitionInterface $field_definition) {
           return $field_definition->getLabel();

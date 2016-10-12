@@ -14,4 +14,5 @@ function field_formatter_field_formatter_info_alter(array &$info) {
   $field_types = array_keys($field_type_manager->getDefinitions());
 
   $info['field_link']['field_types'] = $field_types;
+  $info['field_formatter_limite']['field_types'] = $field_types;
 }

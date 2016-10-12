@@ -15,7 +15,7 @@ abstract class FieldFormatterBase extends EntityReferenceFormatterBase {
   /**
    * Entity view display.
    *
-   * @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface
+   * @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface[]
    */
   protected $viewDisplay;
 
